@@ -4,7 +4,7 @@ Agent IA qui répond à des questions techniques sur la documentation **LangGrap
 
 **Stack** : LangGraph · ChromaDB · FastAPI · Docker · Claude (optionnel) · pytest · GitHub Actions
 
-![Démo : question en français sur une documentation en anglais, réponse et sources cliquables](demo.png)
+![Démo : question en français sur une documentation en anglais, réponse rédigée par Claude avec citations et code](demo.png)
 
 *Question en français, documentation en anglais : l'agent retrouve la bonne section et cite ses sources (capture en mode sans clé API ; avec `ANTHROPIC_API_KEY`, Claude rédige la réponse).*
 
