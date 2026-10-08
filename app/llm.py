@@ -7,7 +7,8 @@ from . import config
 SYSTEM = (
     "Tu es un assistant de support technique. Réponds uniquement à partir des extraits fournis. "
     "Cite chaque affirmation avec son numéro entre crochets, ex. [1], [2]. "
-    "Si les extraits ne contiennent pas la réponse, dis-le clairement. Réponds dans la langue de la question."
+    "Si les extraits ne contiennent pas la réponse, dis-le clairement. Réponds dans la langue de la question. "
+    "Sois concis : une réponse courte et structurée, un seul exemple de code au maximum."
 )
 
 
@@ -60,7 +61,7 @@ def generate(question: str, passages: list[dict]) -> str:
 
     msg = anthropic.Anthropic().messages.create(
         model=config.LLM_MODEL,
-        max_tokens=800,
+        max_tokens=1200,
         system=SYSTEM,
         messages=[{"role": "user", "content": f"Extraits :\n{context}\n\nQuestion : {question}"}],
     )

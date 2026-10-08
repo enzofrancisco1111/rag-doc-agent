@@ -22,7 +22,7 @@ question ─► FastAPI POST /ask ─► LangGraph
 - **Ingestion** : nettoyage MDX (front-matter, balises JSX), découpage par titres en ignorant les blocs de code, puis fenêtres de 900 caractères / 150 de recouvrement. Le titre de page est ajouté au texte vectorisé.
 - **Garde-fou anti-hallucination** : un passage dont la distance cosinus dépasse `MAX_DISTANCE` (0,50) est écarté ; sans passage restant, le nœud `no_answer` répond « je ne sais pas » sans appeler le LLM.
 - **Citations** : chaque source renvoyée contient le fichier, la section et le lien vers la page officielle.
-- **Sans clé API**, l'agent fonctionne en mode extractif (renvoie le passage le plus pertinent). Avec `ANTHROPIC_API_KEY`, Claude rédige la réponse en citant les extraits [n].
+- **Sans clé API**, l'agent fonctionne en mode extractif (renvoie le passage le plus pertinent). Avec `ANTHROPIC_API_KEY` (dans l'environnement ou un fichier `.env`), Claude rédige une réponse concise dans la langue de la question, en citant les extraits [n] et en signalant ce que les extraits ne couvrent pas. Testé sur des questions FR et EN ; le hors-sujet est refusé avant tout appel au modèle (aucun coût).
 
 ## Évaluation
 
