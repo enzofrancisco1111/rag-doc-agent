@@ -1,10 +1,10 @@
-# Doc Support Agent — agent RAG avec citations
+﻿# Doc Support Agent — agent RAG avec citations
 
 Agent IA qui répond à des questions techniques sur la documentation **LangGraph** (33 pages, ~1 350 passages indexés) **en citant ses sources**, et qui **refuse de répondre** quand la documentation ne contient pas l'information.
 
 **Stack** : LangGraph · ChromaDB · FastAPI · Docker · Claude (optionnel) · pytest · GitHub Actions
 
-![Démo : question en français sur une documentation en anglais, réponse rédigée par Claude avec citations et code](demo.png)
+![Démo : question en français sur une documentation en anglais, réponse rédigée par Claude avec citations et code](demo-claude.png)
 
 *Question en français, documentation en anglais : l'agent retrouve la bonne section et cite ses sources (capture en mode sans clé API ; avec `ANTHROPIC_API_KEY`, Claude rédige la réponse).*
 
