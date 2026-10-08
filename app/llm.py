@@ -18,7 +18,7 @@ def generate(question: str, passages: list[dict]) -> str:
         best = passages[0]
         return (
             f"(Mode extractif, pas de clé LLM) Passage le plus pertinent [1] "
-            f"- {best['source']} › {best['section']} :\n{best['text']}"
+            f"- {best['source']} › {best['section']} :\n{best['text'][:700].strip()}{'…' if len(best['text']) > 700 else ''}"
         )
     import anthropic
 

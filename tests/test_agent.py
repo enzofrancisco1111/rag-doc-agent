@@ -54,6 +54,11 @@ def test_off_topic_returns_no_answer(client):
     assert r["sources"] == []
 
 
+def test_home_page_is_served(client):
+    r = client.get("/")
+    assert r.status_code == 200 and "Doc Support Agent" in r.text
+
+
 def test_validation_rejects_empty_question(client):
     assert client.post("/ask", json={"question": ""}).status_code == 422
 

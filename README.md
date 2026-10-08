@@ -38,6 +38,10 @@ Le seuil `MAX_DISTANCE` (0,50) vient d'un balayage (`python -m eval.run_eval --s
 
 Limites connues : pas de reranking ni de recherche hybride ; passages tronqués à 128 tokens par le modèle d'embeddings.
 
+## Interface web
+
+Une page de démonstration est servie sur `http://localhost:8000/` : champ de question, exemples cliquables (FR/EN/hors-sujet), réponse et sources avec liens vers la documentation officielle. L'API brute reste testable sur `/docs`.
+
 ## Lancer en local
 
 ```bash

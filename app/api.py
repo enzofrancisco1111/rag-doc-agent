@@ -1,11 +1,17 @@
+import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from .graph import build_graph
 from .ingest import ingest
 from .store import get_collection
+
+
+STATIC = Path(__file__).parent / "static"
 
 
 class Question(BaseModel):
@@ -23,9 +29,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Doc Support Agent", lifespan=lifespan)
 
 
+@app.get("/", include_in_schema=False)
+def home():
+    return FileResponse(STATIC / "index.html")
+
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "chunks": get_collection().count()}
+    return {"status": "ok", "chunks": get_collection().count(), "llm": bool(os.getenv("ANTHROPIC_API_KEY"))}
 
 
 @app.post("/ingest")

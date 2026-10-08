@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doc Support Agent</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1c2230; --muted:#667085; --accent:#2f5bea; --border:#e3e6ec; --warn:#b54708; --warnbg:#fff4e5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f1218; --card:#171c26; --text:#e8ebf2; --muted:#98a2b3; --accent:#7b9bff; --border:#2a3140; --warn:#fdb022; --warnbg:#2a2113; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { margin:0 0 4px; font-size:26px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:16px; }
+  form { display:flex; gap:8px; }
+  input { flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); font:inherit; }
+  button { padding:12px 18px; border:0; border-radius:8px; background:var(--accent); color:#fff; font:inherit; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .chip { background:transparent; color:var(--accent); border:1px solid var(--border); padding:6px 10px; font-size:14px; }
+  .answer { white-space:pre-wrap; }
+  .warn { background:var(--warnbg); color:var(--warn); padding:8px 12px; border-radius:8px; font-size:14px; margin-bottom:12px; }
+  ol { margin:8px 0 0; padding-left:22px; }
+  li { margin:6px 0; }
+  a { color:var(--accent); }
+  .meta { color:var(--muted); font-size:13px; }
+  h2 { font-size:15px; margin:0 0 4px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Doc Support Agent</h1>
+  <p class="sub">Posez une question sur la documentation LangGraph, en français ou en anglais. Chaque réponse cite ses sources.</p>
+
+  <form id="f">
+    <input id="q" placeholder="Ex. : Comment mettre un graphe en pause ?" autocomplete="off" required minlength="3">
+    <button id="go">Demander</button>
+  </form>
+  <div class="chips" id="chips"></div>
+  <div id="mode" class="meta" style="margin-top:12px"></div>
+
+  <div id="out"></div>
+</main>
+<script>
+const examples = [
+  "Comment mettre un graphe en pause pour attendre une validation humaine ?",
+  "Qu'est-ce qu'un checkpointer ?",
+  "How do I stream tokens from an LLM?",
+  "Que signifie l'erreur GRAPH_RECURSION_LIMIT ?",
+  "Quelle est la recette du tiramisu ?"
+];
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+examples.forEach(t => {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "chip"; b.textContent = t;
+  b.onclick = () => { $("q").value = t; $("f").requestSubmit(); };
+  $("chips").appendChild(b);
+});
+
+fetch("/health").then(r => r.json()).then(h => {
+  $("mode").textContent = `${h.chunks} passages indexés · ` +
+    (h.llm ? "réponses rédigées par Claude" : "mode extractif (aucune clé API : passage brut le plus pertinent)");
+}).catch(() => {});
+
+$("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("go").disabled = true;
+  $("out").innerHTML = '<div class="card meta">Recherche en cours…</div>';
+  try {
+    const r = await fetch("/ask", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({question:$("q").value}) });
+    if (!r.ok) throw new Error("Erreur " + r.status);
+    const d = await r.json();
+    let html = '<div class="card"><h2>Réponse</h2>';
+    if (!d.sources.length) html += '<div class="warn">Aucune source pertinente : l\'agent préfère ne pas inventer.</div>';
+    html += `<div class="answer">${esc(d.answer)}</div></div>`;
+    if (d.sources.length) {
+      html += '<div class="card"><h2>Sources</h2><ol>' + d.sources.map(s =>
+        `<li value="${s.ref}">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.section)}</a>` : esc(s.section)}
+         <span class="meta">— ${esc(s.source)} · distance ${s.distance}</span></li>`).join("") + "</ol></div>";
+    }
+    $("out").innerHTML = html;
+  } catch (err) {
+    $("out").innerHTML = `<div class="card warn">${esc(err.message)}</div>`;
+  } finally { $("go").disabled = false; }
+});
+</script>
+</body>
+</html>
