@@ -35,6 +35,15 @@ def test_clean_mdx_strips_frontmatter_and_jsx():
     assert "<Tip>" not in text and "Hello" in text
 
 
+def test_extractive_answer_skips_code_and_markup():
+    from app.llm import extractive_answer
+
+    code_only = {"text": "Page › Sec\n```python\nx = 1\n```\n:::js\n", "section": "Sec", "source": "a.mdx"}
+    prose_ok = {"text": "Page › Sec2\n" + "Une phrase utile. " * 10, "section": "Sec2", "source": "b.mdx"}
+    out = extractive_answer([code_only, prose_ok])
+    assert out.startswith("[2] Sec2") and "```" not in out and ":::" not in out
+
+
 def test_chunking_respects_size():
     from app.ingest import chunk_text
 
