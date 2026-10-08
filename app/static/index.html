@@ -21,7 +21,12 @@
   button:disabled { opacity:.6; cursor:wait; }
   .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
   .chip { background:transparent; color:var(--accent); border:1px solid var(--border); padding:6px 10px; font-size:14px; }
-  .answer { white-space:pre-wrap; }
+  .answer p { margin:8px 0; white-space:pre-wrap; }
+  .answer ul { margin:8px 0; padding-left:22px; }
+  .answer code { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:.9em; }
+  .answer pre { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px; overflow-x:auto; margin:10px 0; }
+  .answer pre code { background:none; border:0; padding:0; }
+  .cite { color:var(--accent); font-size:.75em; }
   .warn { background:var(--warnbg); color:var(--warn); padding:8px 12px; border-radius:8px; font-size:14px; margin-bottom:12px; }
   ol { margin:8px 0 0; padding-left:22px; }
   li { margin:6px 0; }
@@ -54,6 +59,28 @@ const examples = [
 const $ = id => document.getElementById(id);
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+// Mini rendu markdown : le texte est échappé d'abord, donc aucun HTML venant du modèle n'est interprété.
+function md(text) {
+  const blocks = [];
+  let s = esc(text).replace(/```[\w-]*\n([\s\S]*?)(```|$)/g, (_, code) => {
+    blocks.push(code.replace(/\n$/, ""));
+    return `\u0000${blocks.length - 1}\u0000`;
+  });
+  s = s.replace(/`([^`\n]+)`/g, "<code>$1</code>")
+       .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+       .replace(/\[(\d+)\]/g, '<sup class="cite">[$1]</sup>');
+  const out = []; let list = false;
+  for (const line of s.split("\n")) {
+    const li = line.match(/^\s*[-*]\s+(.*)/);
+    if (li) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${li[1]}</li>`); continue; }
+    if (list) { out.push("</ul>"); list = false; }
+    if (/^\u0000\d+\u0000$/.test(line.trim())) out.push(line.trim());
+    else if (line.trim()) out.push(`<p>${line}</p>`);
+  }
+  if (list) out.push("</ul>");
+  return out.join("").replace(/\u0000(\d+)\u0000/g, (_, i) => `<pre><code>${blocks[i]}</code></pre>`);
+}
+
 examples.forEach(t => {
   const b = document.createElement("button");
   b.type = "button"; b.className = "chip"; b.textContent = t;
@@ -76,7 +103,7 @@ $("f").addEventListener("submit", async e => {
     const d = await r.json();
     let html = '<div class="card"><h2>Réponse</h2>';
     if (!d.sources.length) html += '<div class="warn">Aucune source pertinente : l\'agent préfère ne pas inventer.</div>';
-    html += `<div class="answer">${esc(d.answer)}</div></div>`;
+    html += `<div class="answer">${md(d.answer)}</div></div>`;
     if (d.sources.length) {
       html += '<div class="card"><h2>Sources</h2><ol>' + d.sources.map(s =>
         `<li value="${s.ref}">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.section)}</a>` : esc(s.section)}
