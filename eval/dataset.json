@@ -1,35 +1,183 @@
 {
-  "in_scope": [
-    {"q": "What is LangGraph and what is it used for?", "expected": ["overview"]},
-    {"q": "How do I install LangGraph?", "expected": ["install", "quickstart"]},
-    {"q": "How do I pause a graph and wait for human approval?", "expected": ["interrupts"]},
-    {"q": "What is a checkpointer and why do I need one?", "expected": ["checkpointers", "persistence", "MISSING_CHECKPOINTER"]},
-    {"q": "How do I stream tokens from an LLM inside a graph?", "expected": ["streaming"]},
-    {"q": "How do I add conditional edges to route between nodes?", "expected": ["graph-api", "use-graph-api"]},
-    {"q": "What is the difference between the Graph API and the Functional API?", "expected": ["choosing-apis", "functional-api"]},
-    {"q": "How do I replay or fork a past execution with time travel?", "expected": ["use-time-travel"]},
-    {"q": "How do I use subgraphs?", "expected": ["use-subgraphs"]},
-    {"q": "What does the GRAPH_RECURSION_LIMIT error mean?", "expected": ["GRAPH_RECURSION_LIMIT"]},
-    {"q": "Why do I get INVALID_CONCURRENT_GRAPH_UPDATE?", "expected": ["INVALID_CONCURRENT_GRAPH_UPDATE"]},
-    {"q": "How do I share long-term memory across threads with a store?", "expected": ["stores", "add-memory"]},
-    {"q": "How do I build an agentic RAG system with LangGraph?", "expected": ["agentic-rag"]},
-    {"q": "How do I test my LangGraph agent?", "expected": ["test"]},
-    {"q": "How do I run a LangGraph app locally with the dev server?", "expected": ["local-server", "studio"]},
-    {"q": "How should I structure my application files and langgraph.json?", "expected": ["application-structure"]},
-    {"q": "What is the Pregel runtime and how does it execute supersteps?", "expected": ["pregel"]},
-    {"q": "How does LangGraph recover from failures and retry nodes?", "expected": ["fault-tolerance"]},
-    {"q": "How do I build a SQL agent that queries a database?", "expected": ["sql-agent"]},
-    {"q": "How do I trace and debug my agent with observability tools?", "expected": ["observability"]},
-    {"q": "What workflow patterns exist such as prompt chaining, routing and parallelization?", "expected": ["workflows-agents"]},
-    {"q": "How do I deploy a LangGraph application?", "expected": ["deploy"]}
-  ],
-  "out_of_scope": [
-    "What is the recipe for a tiramisu?",
-    "Who won the football World Cup in 2018?",
-    "How do I configure a Kubernetes ingress controller?",
-    "What is the capital of Australia?",
-    "How do I train a convolutional neural network on MNIST?",
-    "Explain how Direct Lake works in Microsoft Fabric",
-    "What is the best way to cook salmon?"
-  ]
+ "in_scope": [
+  {
+   "q": "What is LangGraph and what is it used for?",
+   "expected": [
+    "overview"
+   ],
+   "q_fr": "Qu'est-ce que LangGraph et à quoi sert-il ?"
+  },
+  {
+   "q": "How do I install LangGraph?",
+   "expected": [
+    "install",
+    "quickstart"
+   ],
+   "q_fr": "Comment installer LangGraph ?"
+  },
+  {
+   "q": "How do I pause a graph and wait for human approval?",
+   "expected": [
+    "interrupts"
+   ],
+   "q_fr": "Comment mettre un graphe en pause pour attendre une validation humaine ?"
+  },
+  {
+   "q": "What is a checkpointer and why do I need one?",
+   "expected": [
+    "checkpointers",
+    "persistence",
+    "MISSING_CHECKPOINTER"
+   ],
+   "q_fr": "Qu'est-ce qu'un checkpointer et pourquoi en ai-je besoin ?"
+  },
+  {
+   "q": "How do I stream tokens from an LLM inside a graph?",
+   "expected": [
+    "streaming"
+   ],
+   "q_fr": "Comment diffuser en streaming les tokens d'un LLM dans un graphe ?"
+  },
+  {
+   "q": "How do I add conditional edges to route between nodes?",
+   "expected": [
+    "graph-api",
+    "use-graph-api"
+   ],
+   "q_fr": "Comment ajouter des arêtes conditionnelles pour router entre les nœuds ?"
+  },
+  {
+   "q": "What is the difference between the Graph API and the Functional API?",
+   "expected": [
+    "choosing-apis",
+    "functional-api"
+   ],
+   "q_fr": "Quelle est la différence entre la Graph API et la Functional API ?"
+  },
+  {
+   "q": "How do I replay or fork a past execution with time travel?",
+   "expected": [
+    "use-time-travel"
+   ],
+   "q_fr": "Comment rejouer ou bifurquer une exécution passée avec le time travel ?"
+  },
+  {
+   "q": "How do I use subgraphs?",
+   "expected": [
+    "use-subgraphs"
+   ],
+   "q_fr": "Comment utiliser les sous-graphes ?"
+  },
+  {
+   "q": "What does the GRAPH_RECURSION_LIMIT error mean?",
+   "expected": [
+    "GRAPH_RECURSION_LIMIT"
+   ],
+   "q_fr": "Que signifie l'erreur GRAPH_RECURSION_LIMIT ?"
+  },
+  {
+   "q": "Why do I get INVALID_CONCURRENT_GRAPH_UPDATE?",
+   "expected": [
+    "INVALID_CONCURRENT_GRAPH_UPDATE"
+   ],
+   "q_fr": "Pourquoi ai-je l'erreur INVALID_CONCURRENT_GRAPH_UPDATE ?"
+  },
+  {
+   "q": "How do I share long-term memory across threads with a store?",
+   "expected": [
+    "stores",
+    "add-memory"
+   ],
+   "q_fr": "Comment partager une mémoire long terme entre plusieurs threads avec un store ?"
+  },
+  {
+   "q": "How do I build an agentic RAG system with LangGraph?",
+   "expected": [
+    "agentic-rag"
+   ],
+   "q_fr": "Comment construire un système de RAG agentique avec LangGraph ?"
+  },
+  {
+   "q": "How do I test my LangGraph agent?",
+   "expected": [
+    "test"
+   ],
+   "q_fr": "Comment tester mon agent LangGraph ?"
+  },
+  {
+   "q": "How do I run a LangGraph app locally with the dev server?",
+   "expected": [
+    "local-server",
+    "studio"
+   ],
+   "q_fr": "Comment lancer une application LangGraph en local avec le serveur de développement ?"
+  },
+  {
+   "q": "How should I structure my application files and langgraph.json?",
+   "expected": [
+    "application-structure"
+   ],
+   "q_fr": "Comment structurer les fichiers de mon application et le langgraph.json ?"
+  },
+  {
+   "q": "What is the Pregel runtime and how does it execute supersteps?",
+   "expected": [
+    "pregel"
+   ],
+   "q_fr": "Qu'est-ce que le runtime Pregel et comment exécute-t-il les supersteps ?"
+  },
+  {
+   "q": "How does LangGraph recover from failures and retry nodes?",
+   "expected": [
+    "fault-tolerance"
+   ],
+   "q_fr": "Comment LangGraph reprend-il après une panne et relance-t-il les nœuds ?"
+  },
+  {
+   "q": "How do I build a SQL agent that queries a database?",
+   "expected": [
+    "sql-agent"
+   ],
+   "q_fr": "Comment construire un agent SQL qui interroge une base de données ?"
+  },
+  {
+   "q": "How do I trace and debug my agent with observability tools?",
+   "expected": [
+    "observability"
+   ],
+   "q_fr": "Comment tracer et déboguer mon agent avec des outils d'observabilité ?"
+  },
+  {
+   "q": "What workflow patterns exist such as prompt chaining, routing and parallelization?",
+   "expected": [
+    "workflows-agents"
+   ],
+   "q_fr": "Quels patterns de workflow existent, comme le prompt chaining, le routage et la parallélisation ?"
+  },
+  {
+   "q": "How do I deploy a LangGraph application?",
+   "expected": [
+    "deploy"
+   ],
+   "q_fr": "Comment déployer une application LangGraph ?"
+  }
+ ],
+ "out_of_scope": [
+  "What is the recipe for a tiramisu?",
+  "Who won the football World Cup in 2018?",
+  "How do I configure a Kubernetes ingress controller?",
+  "What is the capital of Australia?",
+  "How do I train a convolutional neural network on MNIST?",
+  "Explain how Direct Lake works in Microsoft Fabric",
+  "What is the best way to cook salmon?"
+ ],
+ "out_of_scope_fr": [
+  "Quelle est la recette du tiramisu ?",
+  "Qui a gagné la Coupe du monde de football en 2018 ?",
+  "Comment configurer un ingress controller Kubernetes ?",
+  "Quelle est la capitale de l'Australie ?",
+  "Comment entraîner un réseau convolutif sur MNIST ?",
+  "Explique comment fonctionne Direct Lake dans Microsoft Fabric",
+  "Quelle est la meilleure façon de cuire du saumon ?"
+ ]
 }

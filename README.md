@@ -7,7 +7,7 @@ Agent IA qui répond à des questions techniques sur la documentation **LangGrap
 ## Architecture
 
 ```
-docs/**/*.mdx ─► ingest.py ─► ChromaDB (embeddings MiniLM locaux, distance cosinus)
+docs/**/*.mdx ─► ingest.py ─► ChromaDB (embeddings multilingues locaux, distance cosinus)
                                    │
 question ─► FastAPI POST /ask ─► LangGraph
                                    ├─ retrieve  : top-k passages + filtre de pertinence
@@ -16,22 +16,27 @@ question ─► FastAPI POST /ask ─► LangGraph
 ```
 
 - **Ingestion** : nettoyage MDX (front-matter, balises JSX), découpage par titres en ignorant les blocs de code, puis fenêtres de 900 caractères / 150 de recouvrement. Le titre de page est ajouté au texte vectorisé.
-- **Garde-fou anti-hallucination** : un passage dont la distance cosinus dépasse `MAX_DISTANCE` (0,55) est écarté ; sans passage restant, le nœud `no_answer` répond « je ne sais pas » sans appeler le LLM.
+- **Garde-fou anti-hallucination** : un passage dont la distance cosinus dépasse `MAX_DISTANCE` (0,50) est écarté ; sans passage restant, le nœud `no_answer` répond « je ne sais pas » sans appeler le LLM.
 - **Citations** : chaque source renvoyée contient le fichier, la section et le lien vers la page officielle.
 - **Sans clé API**, l'agent fonctionne en mode extractif (renvoie le passage le plus pertinent). Avec `ANTHROPIC_API_KEY`, Claude rédige la réponse en citant les extraits [n].
 
 ## Évaluation
 
-Jeu de test dans [`eval/dataset.json`](eval/dataset.json) : 22 questions avec la page attendue + 7 questions hors-sujet.
+Jeu de test dans [`eval/dataset.json`](eval/dataset.json) : 22 questions avec la page attendue + 7 questions hors-sujet, **chacune en anglais et en français** (la documentation indexée est en anglais).
 
-| Version du retrieval | hit@4 | MRR | Hors-sujet rejeté |
-|---|---|---|---|
-| Passages bruts | 86 % | 0,69 | 100 % |
-| + titre de page dans le texte vectorisé (actuelle) | **91 %** | **0,82** | **100 %** |
+| Modèle d'embeddings | EN hit@4 | EN MRR | FR hit@4 | FR MRR | Poids |
+|---|---|---|---|---|---|
+| all-MiniLM-L6-v2 (anglais seul) | 91 % | 0,82 | 45 % | 0,42 | 0,1 Go |
+| **paraphrase-multilingual-MiniLM-L12-v2 (retenu)** | 82 % | 0,79 | **77 %** | 0,74 | 0,2 Go |
+| paraphrase-multilingual-mpnet-base-v2 | 82 % | 0,70 | 86 % | 0,69 | 1 Go |
+| potion-multilingual-128M | 64 % | 0,55 | 45 % | 0,36 | 0,5 Go |
 
-Le seuil `MAX_DISTANCE` a été choisi par balayage (`python -m eval.run_eval --sweep`) : plateau de 0,50 à 0,65 ; 0,55 laisse de la marge des deux côtés. Un test pytest échoue si hit@4 passe sous 85 % (garde-fou de non-régression en CI).
+Choix : le MiniLM multilingue offre le meilleur compromis (5× plus léger que mpnet, meilleur MRR, image Docker raisonnable). Le modèle se change avec `EMBEDDING_MODEL`. Les questions françaises passent de 45 % à 77 % ; en contrepartie l'anglais perd 9 points, car ce modèle tronque les passages à 128 tokens.
+Avec 22 questions, une question vaut 4,5 points : les écarts de quelques points ne sont pas significatifs.
 
-Limites connues : le modèle d'embeddings par défaut est anglophone (questions en anglais recommandées pour la recherche ; Claude répond dans la langue de la question) ; pas de reranking ni de recherche hybride.
+Le seuil `MAX_DISTANCE` (0,50) vient d'un balayage (`python -m eval.run_eval --sweep`) : 100 % des questions hors-sujet rejetées en EN et FR. Des tests pytest échouent si la qualité régresse (CI).
+
+Limites connues : pas de reranking ni de recherche hybride ; passages tronqués à 128 tokens par le modèle d'embeddings.
 
 ## Lancer en local
 
@@ -70,7 +75,7 @@ Déposer des `.md` / `.mdx` / `.txt` dans `docs/` puis `POST /ingest`. Adapter `
 ## Tests
 
 ```bash
-pytest        # 7 tests : ingestion, API, citations, rejet hors-sujet, qualité du retrieval
+pytest        # 8 tests : ingestion, API, citations, questions en français, rejet hors-sujet, qualité du retrieval
 ```
 
 ## Crédits
