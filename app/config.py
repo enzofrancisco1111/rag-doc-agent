@@ -1,6 +1,20 @@
 import os
 from pathlib import Path
 
+
+def _load_dotenv(path: Path = Path(".env")) -> None:
+    """Charge .env sans dépendance ; ne remplace jamais une variable déjà définie (même vide)."""
+    if not path.is_file():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
+
+
+_load_dotenv()
+
 DOCS_DIR = Path(os.getenv("DOCS_DIR", "docs"))
 CHROMA_DIR = os.getenv("CHROMA_DIR", "chroma_db")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
