@@ -82,6 +82,10 @@ Déposer des `.md` / `.mdx` / `.txt` dans `docs/` puis `POST /ingest`. Adapter `
 pytest        # 8 tests : ingestion, API, citations, questions en français, rejet hors-sujet, qualité du retrieval
 ```
 
+## Licence
+
+Code sous licence MIT (voir `LICENSE`). La documentation indexée dans `docs/` reste sous sa propre licence MIT (LangChain).
+
 ## Crédits
 
 La documentation indexée provient de [langchain-ai/docs](https://github.com/langchain-ai/docs) (licence MIT, © 2025 LangChain) — voir `docs/LICENSE-langchain-docs.txt`.
