@@ -1,0 +1,35 @@
+{
+  "in_scope": [
+    {"q": "What is LangGraph and what is it used for?", "expected": ["overview"]},
+    {"q": "How do I install LangGraph?", "expected": ["install", "quickstart"]},
+    {"q": "How do I pause a graph and wait for human approval?", "expected": ["interrupts"]},
+    {"q": "What is a checkpointer and why do I need one?", "expected": ["checkpointers", "persistence", "MISSING_CHECKPOINTER"]},
+    {"q": "How do I stream tokens from an LLM inside a graph?", "expected": ["streaming"]},
+    {"q": "How do I add conditional edges to route between nodes?", "expected": ["graph-api", "use-graph-api"]},
+    {"q": "What is the difference between the Graph API and the Functional API?", "expected": ["choosing-apis", "functional-api"]},
+    {"q": "How do I replay or fork a past execution with time travel?", "expected": ["use-time-travel"]},
+    {"q": "How do I use subgraphs?", "expected": ["use-subgraphs"]},
+    {"q": "What does the GRAPH_RECURSION_LIMIT error mean?", "expected": ["GRAPH_RECURSION_LIMIT"]},
+    {"q": "Why do I get INVALID_CONCURRENT_GRAPH_UPDATE?", "expected": ["INVALID_CONCURRENT_GRAPH_UPDATE"]},
+    {"q": "How do I share long-term memory across threads with a store?", "expected": ["stores", "add-memory"]},
+    {"q": "How do I build an agentic RAG system with LangGraph?", "expected": ["agentic-rag"]},
+    {"q": "How do I test my LangGraph agent?", "expected": ["test"]},
+    {"q": "How do I run a LangGraph app locally with the dev server?", "expected": ["local-server", "studio"]},
+    {"q": "How should I structure my application files and langgraph.json?", "expected": ["application-structure"]},
+    {"q": "What is the Pregel runtime and how does it execute supersteps?", "expected": ["pregel"]},
+    {"q": "How does LangGraph recover from failures and retry nodes?", "expected": ["fault-tolerance"]},
+    {"q": "How do I build a SQL agent that queries a database?", "expected": ["sql-agent"]},
+    {"q": "How do I trace and debug my agent with observability tools?", "expected": ["observability"]},
+    {"q": "What workflow patterns exist such as prompt chaining, routing and parallelization?", "expected": ["workflows-agents"]},
+    {"q": "How do I deploy a LangGraph application?", "expected": ["deploy"]}
+  ],
+  "out_of_scope": [
+    "What is the recipe for a tiramisu?",
+    "Who won the football World Cup in 2018?",
+    "How do I configure a Kubernetes ingress controller?",
+    "What is the capital of Australia?",
+    "How do I train a convolutional neural network on MNIST?",
+    "Explain how Direct Lake works in Microsoft Fabric",
+    "What is the best way to cook salmon?"
+  ]
+}
