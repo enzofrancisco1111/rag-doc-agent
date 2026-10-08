@@ -1,5 +1,12 @@
 __pycache__/
 .venv/
 chroma_db/
-.env
 .pytest_cache/
+
+# Secrets : ne jamais versionner (seul .env.example est autorisé)
+.env
+*.env
+.env.*
+!.env.example
+keys/
+*.key
