@@ -23,5 +23,10 @@ TOP_K = int(os.getenv("TOP_K", "4"))
 # Distance cosinus max (0 = identique) au-delà de laquelle un passage est jugé hors-sujet.
 MAX_DISTANCE = float(os.getenv("MAX_DISTANCE", "0.50"))
 LLM_MODEL = os.getenv("LLM_MODEL", "claude-sonnet-5-5")
+# "workflow" : chemin fixe retrieve -> generate (défaut) ; "agentic" : le modèle pilote la recherche.
+AGENT_MODE = os.getenv("AGENT_MODE", "workflow")
+AGENT_MODEL = os.getenv("AGENT_MODEL", LLM_MODEL)
+MAX_SEARCHES = int(os.getenv("MAX_SEARCHES", "3"))  # recherches max par question (borne le coût)
+AGENT_MAX_TOKENS = int(os.getenv("AGENT_MAX_TOKENS", "1200"))
 CHUNK_SIZE = 900  # caractères
 CHUNK_OVERLAP = 150
