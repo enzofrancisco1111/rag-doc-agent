@@ -3,8 +3,8 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from . import config, llm
-from .store import get_collection
+from . import llm
+from .retrieval import search
 
 
 class State(TypedDict, total=False):
@@ -15,14 +15,7 @@ class State(TypedDict, total=False):
 
 
 def retrieve(state: State) -> State:
-    res = get_collection().query(query_texts=[state["question"]], n_results=config.TOP_K)
-    passages = []
-    for doc, meta, dist in zip(res["documents"][0], res["metadatas"][0], res["distances"][0]):
-        if dist <= config.MAX_DISTANCE:
-            passages.append(
-                {"text": doc, "source": meta["source"], "section": meta["section"], "url": meta.get("url", ""), "distance": round(dist, 3)}
-            )
-    return {"passages": passages}
+    return {"passages": search(state["question"])}
 
 
 def generate(state: State) -> State:
